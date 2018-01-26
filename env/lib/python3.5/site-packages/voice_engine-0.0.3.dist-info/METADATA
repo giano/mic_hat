@@ -1,0 +1,23 @@
+Metadata-Version: 2.0
+Name: voice-engine
+Version: 0.0.3
+Summary: Voice engine to build voice interaction applications
+Home-page: https://github.com/voice-engine/voice-engine
+Author: Yihui Xiong
+Author-email: yihui.xiong@hotmail.com
+License: GNU General Public License v3
+Keywords: voice doa beamforming kws
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+
+The library includes building blocks to create voice interface applications
+
+

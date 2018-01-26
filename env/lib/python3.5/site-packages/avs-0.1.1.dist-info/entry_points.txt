@@ -1,0 +1,7 @@
+[console_scripts]
+alexa = avs.main:main
+alexa-audio-check = avs.check:main
+alexa-auth = avs.auth:main
+alexa-tap = avs.alexa:main
+dueros-auth = avs.auth:main
+

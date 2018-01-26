@@ -20,6 +20,10 @@ from __future__ import print_function
 import argparse
 import os.path
 import json
+import signal
+import sys
+import time
+import atexit
 
 import google.oauth2.credentials
 
@@ -28,6 +32,7 @@ from google.assistant.library.event import EventType
 from google.assistant.library.file_helpers import existing_file
 from pixels import pixels
 
+debug = False
 
 def process_event(event):
     """Pretty prints events.
@@ -39,10 +44,12 @@ def process_event(event):
         event(event.Event): The current event to process.
     """
     if event.type == EventType.ON_CONVERSATION_TURN_STARTED:
-        print()
+        if debug:
+            print()
         pixels.wakeup()
 
-    print(event)
+    if debug:
+        print(event)
 
     if event.type == EventType.ON_END_OF_UTTERANCE:
         pixels.think()
@@ -55,8 +62,11 @@ def process_event(event):
         if event.args and event.args['with_follow_on_turn']:
             pixels.listen()
 
+def turnoffpixels():
+    pixels.off()
 
-def main():
+def process():
+    pixels.off()
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('--credentials', type=existing_file,
@@ -69,13 +79,35 @@ def main():
                         help='Path to store and read OAuth2 credentials')
     args = parser.parse_args()
     with open(args.credentials, 'r') as f:
-        credentials = google.oauth2.credentials.Credentials(token=None,
-                                                            **json.load(f))
+        credentials = google.oauth2.credentials.Credentials(
+            token=None, **json.load(f))
 
-    with Assistant(credentials) as assistant:
+    pixels.wakeup()
+    time.sleep(3)
+    pixels.off()
+    
+    with Assistant(credentials, "Jinni") as assistant:
         for event in assistant.start():
             process_event(event)
+        turnoffpixels()
 
+def main():
+    try:
+        process()
+    except (KeyboardInterrupt, SystemExit):
+        print("W: interrupt received, stopping…")
+    finally:
+        turnoffpixels()
 
 if __name__ == '__main__':
     main()
+
+
+def signal_handler(signal, frame):
+    turnoffpixels()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+
+atexit.register(turnoffpixels)

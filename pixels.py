@@ -123,6 +123,7 @@ pixels = Pixels()
 
 
 if __name__ == '__main__':
+    pixels.off()
     while True:
 
         try:
